@@ -1,0 +1,161 @@
+name: CI
+
+on: push
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+  FILE_PATH_VERSION_INFO: ./packages/utils-version/src/VersionInfo.ts
+
+  FILE_PATH_OCIGNIS_APP_BUILD_NEXT: ./apps/ocignis-app/build-next-static
+
+  FILE_PATH_OCIGNIS_UI_BUILD: ./packages/ocignis-ui/build-storybook-static
+
+  CACHE_PATHS_BUILD: |
+    ./apps/ocignis-app/build-next-static
+    ./packages/ocignis-ui/build-storybook-static
+  CACHE_KEY_BUILD: build-${{ github.sha }}
+
+jobs:
+  build:
+    name: Build 🏗️
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
+
+      - name: Version Info 💉
+        run: |
+          COMMIT=$GITHUB_SHA
+          BRANCH=${GITHUB_REF#refs/heads/}
+          TAG=''
+          if [[ ${{ github.ref_type }} == 'tag' ]]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          fi
+          echo "write tag, branch & commit id to $FILE_PATH_VERSION_INFO"
+          echo "export const VersionInfo = { tag: '$TAG', branch: '$BRANCH', commit: '$COMMIT' };" > $FILE_PATH_VERSION_INFO
+          cat $FILE_PATH_VERSION_INFO
+
+      - name: Build 🏗️
+        env:
+          NEXT_PUBLIC_NODE_ENV: 'production'
+          NEXT_PUBLIC_BASE_URL_OCIGNIS_API: 'https://bot-1.ocignis.com/trpc' ###
+        run: |
+          npm run build
+          npm run storybook-build
+
+      - name: Cache build ⚡
+        id: cache_build
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_PATHS_BUILD }}
+          key: ${{ env.CACHE_KEY_BUILD }}
+
+  lint:
+    name: Lint ✅
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
+
+      - name: Lint ✅
+        run: npm run lint
+
+  tsc:
+    name: TypeScript Compiler 🔎
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
+
+      - name: TypeScript Compiler 🔎
+        run: npm run tsc
+
+  test:
+    name: Test 🧪
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
+
+      - name: Test 🧪
+        run: npm run test
+
+  ###################################################################
+  # Deployments
+  ###################################################################
+
+  ##############
+  # Ocignis App
+  ##############
+  deploy-ocignis:
+    name: Deploy - Ocignis App 🚀
+    needs: [build, lint, tsc, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: Ocignis App
+      url: https://app.ocignis.com
+
+    steps:
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_PATHS_BUILD }}
+          key: ${{ env.CACHE_KEY_BUILD }}
+
+      - uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ${{ env.FILE_PATH_OCIGNIS_APP_BUILD_NEXT }}
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_OCIGNIS_APP }}
+
+  ##############
+  # Ocignis UI
+  ##############
+
+  deploy-ocignis-ui:
+    name: Deploy - Ocignis UI 🚀
+    needs: [build, lint, tsc, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: Ocignis UI
+      url: https://ui.ocignis.com
+
+    steps:
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_PATHS_BUILD }}
+          key: ${{ env.CACHE_KEY_BUILD }}
+
+      - uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ${{ env.FILE_PATH_OCIGNIS_UI_BUILD }}
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_OCIGNIS_UI }}
