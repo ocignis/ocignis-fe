@@ -1,0 +1,24 @@
+{
+  "name": "eslint-config-base",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "update-dependencies": "npx npm-check-updates -u"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-plugin-query": "4.21.0",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
+    "eslint": "8.32.0",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-import-resolver-typescript": "3.5.3",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jest": "27.2.1",
+    "eslint-plugin-jest-dom": "4.0.3",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "7.32.1",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "eslint-plugin-storybook": "0.6.10",
+    "eslint-plugin-testing-library": "5.10.0"
+  }
+}
