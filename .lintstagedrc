@@ -1,0 +1,4 @@
+{
+  "*": ["pretty-quick --staged"],
+  "!(apps/ocignis-app/src/common/api/ocignis/api-types/**/*)*.{js,jsx,ts,tsx}": ["eslint --max-warnings 0"]
+}
