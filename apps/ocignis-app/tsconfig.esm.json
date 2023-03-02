@@ -1,0 +1,12 @@
+{
+  "display": "Dev",
+  "compilerOptions": {
+    "moduleResolution": "node"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "esnext",
+      "target": "ESNext"
+    }
+  }
+}

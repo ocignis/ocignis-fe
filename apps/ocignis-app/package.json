@@ -1,0 +1,30 @@
+{
+  "name": "ocignis-app",
+  "version": "0.0.0",
+  "scripts": {
+    "import-ocignis-shared": "ts-node importOcignisShared/index.ts",
+    "build": "next build && next export -o build-next-static",
+    "dev": "open http://localhost:3100 && next dev --port 3100",
+    "lint": "eslint --max-warnings 0 .",
+    "lint-fix": "eslint --fix .",
+    "tsc": "tsc -p tsconfig.json",
+    "temp-disable-test": "jest --verbose",
+    "test-watch": "jest --verbose --watch",
+    "test-coverage": "jest --coverage --verbose",
+    "storybook": "start-storybook -p 6100 --quiet",
+    "storybook-build": "build-storybook -o build-storybook-static",
+    "update-dependencies": "npx npm-check-updates -u"
+  },
+  "dependencies": {
+    "config-mui": "*",
+    "ocignis-ui": "*",
+    "ocignis-utils": "*",
+    "utils-mui": "*",
+    "utils-version": "*"
+  },
+  "devDependencies": {
+    "config-storybook": "*",
+    "config-tsconfig": "*",
+    "utils-test": "*"
+  }
+}

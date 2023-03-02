@@ -17,3 +17,6 @@ build
 
 npm-debug.log*
 .pnpm-debug.log*
+
+# keep env files ONLY for demo purpose
+# .env
