@@ -1,11 +1,11 @@
 import { MRT_ColumnDef } from 'material-react-table';
 import { useMemo } from 'react';
 
-import { PositionClosed } from '.';
-
 import { CellDate } from './CellDate';
 import { CellGeneric } from './CellGeneric';
 import { Header } from './Header';
+
+import { PositionClosed } from '.';
 
 export const useColumns = () => {
   const columns = useMemo<Array<MRT_ColumnDef<PositionClosed>>>(
