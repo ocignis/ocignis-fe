@@ -27,6 +27,7 @@ const importOcignisShared = () => {
       path: SHARED_CONTENT_ITEM.path,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     const decodedFileContent = Buffer.from(octoRepoResponse.data.content, 'base64');
 
     fs.writeFileSync(SHARED_CONTENT_ITEM.targetPath, decodedFileContent);

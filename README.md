@@ -2,9 +2,7 @@
 
 [![CI][ci-badge]][ci-url]
 
-
 Ocignis frontend monorepo
-
 
 ## Deployments
 

@@ -2,10 +2,10 @@ import { Story, Meta } from '@storybook/react';
 import { Button } from 'ocignis-ui/src/Button/index';
 import { useState } from 'react';
 
-import { Chart, ChartProps } from '.';
-
 import { ChartSeriesLineData } from './makeHighChartsStockSeries/makeSeriesSingle';
 import { mockChartSeriesFlagsData, mockChartSeriesLineData } from './mockChartSeriesData';
+
+import { Chart, ChartProps } from '.';
 
 export default {
   component: Chart,
