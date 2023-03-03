@@ -5,9 +5,9 @@ import { InputRhf } from 'common/components';
 import { FormDataBotBacktestConfig } from '.';
 
 export const FormStrategySpecificConfig = () => {
-  const { control, watch, setValue } = useFormContext<FormDataBotBacktestConfig>();
+  const { control, watch } = useFormContext<FormDataBotBacktestConfig>();
 
-  setValue('strategySpecificConfig.isShortingEnabled', false);
+  // setValue('strategySpecificConfig.isShortingEnabled', false);
 
   return watch('strategyName') === 'SMA' ? (
     <>
