@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 
 import { BotBacktestInstance, BotBacktestInstances } from 'common/api/ocignis';
+import { Select } from 'common/components';
 
 import { FormDataBotBacktestConfig } from '.';
-
-import { Select } from 'common/components';
 
 export type OnUpsertBotBacktestInstance = ({
   botBacktestInstancePayload,

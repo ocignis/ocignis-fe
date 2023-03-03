@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react';
 import { SubmitHandler, useFormContext } from 'react-hook-form';
 
 import { BotInstance, BotInstances } from 'common/api/ocignis';
+import { Select } from 'common/components';
 
 import { FormDataBotConfig } from '.';
-
-import { Select } from 'common/components';
 
 export type OnUpsertBotInstance = ({ botInstancePayload }: { botInstancePayload: BotInstance }) => void;
 
