@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { BaseTextFieldProps, Box, SxProps } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { dateFormat } from 'ocignis-utils';
 
@@ -6,37 +6,45 @@ import { ErrorMessage } from '../ErrorMessage';
 
 export type DatePickerProps = {
   label: string;
-  value: string | Date;
+  value: Date | null;
   errorMessage?: string;
+  isDisabled?: boolean;
   isFullWidth?: boolean;
-  onChange: (dateSelected: string | Date) => void;
+  size?: BaseTextFieldProps['size'];
+  addLabelMargin?: boolean;
+  sx?: SxProps;
+  onChange: (dateSelected: Date | null) => void;
 };
 
-export const DatePicker = ({ label, value, errorMessage, isFullWidth = true, onChange }: DatePickerProps) => {
+export const DatePicker = ({
+  label,
+  value,
+  errorMessage,
+  isDisabled = false,
+  isFullWidth = true,
+  size = 'small',
+  addLabelMargin = false,
+  sx,
+  onChange,
+}: DatePickerProps) => {
   return (
-    <DesktopDatePicker
-      label={label}
-      value={value}
-      inputFormat={dateFormat.DATE_TIME}
-      onChange={(value, keyboardInputValue) => {
-        if (keyboardInputValue !== undefined) {
-          const keyboardInputValueFormatted =
-            typeof value === 'string' ? keyboardInputValue : new Date(keyboardInputValue);
-
-          onChange(keyboardInputValueFormatted);
-        }
-
-        // @ts-expect-error Null value cant be triggered.
-        onChange(value);
-      }}
-      renderInput={(params) => (
-        <Box sx={{ mt: 1 }}>
-          <TextField fullWidth={isFullWidth} error={Boolean(errorMessage)} {...params} />
-          <Box>
-            <ErrorMessage>{errorMessage}</ErrorMessage>
-          </Box>
-        </Box>
-      )}
-    />
+    <Box sx={{ display: 'flex', flexDirection: 'column', mt: addLabelMargin ? 1 : 0 }}>
+      <DesktopDatePicker
+        disabled={isDisabled}
+        label={label}
+        value={value}
+        format={dateFormat.DATE_TIME}
+        onChange={onChange}
+        slotProps={{
+          textField: {
+            fullWidth: isFullWidth,
+            size,
+            error: Boolean(errorMessage),
+            sx,
+          },
+        }}
+      />
+      <ErrorMessage>{errorMessage}</ErrorMessage>
+    </Box>
   );
 };
