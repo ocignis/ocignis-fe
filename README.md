@@ -1,6 +1,7 @@
 # Ocignis Frontend
 
 [![CI][ci-badge]][ci-url]
+[![CI-Deployment][ci-deployment-badge]][ci-deployment-url]
 
 Ocignis frontend monorepo
 
@@ -25,3 +26,5 @@ This frontend monorepo implements Ocignis trading bot app. For more general info
 
 [ci-badge]: https://github.com/ocignis/ocignis-fe/actions/workflows/CI.yml/badge.svg
 [ci-url]: https://github.com/ocignis/ocignis-fe/actions/workflows/CI.yml
+[ci-deployment-badge]: https://github.com/ocignis/ocignis-fe/actions/workflows/CI-Deployment.yml/badge.svg
+[ci-deployment-url]: https://github.com/ocignis/ocignis-fe/actions/workflows/CI-Deployment.yml
