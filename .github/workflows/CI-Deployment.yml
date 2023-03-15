@@ -1,12 +1,19 @@
-name: CI
+name: CI-Deployment
 
-on: push
+on:
+  push:
+    tags:
+      - '*'
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
   FILE_PATH_VERSION_INFO: ./packages/utils-version/src/VersionInfo.ts
+
+  FILE_PATH_OCIGNIS_APP_BUILD_NEXT: ./apps/ocignis-app/build-next-static
+
+  FILE_PATH_OCIGNIS_UI_BUILD: ./packages/ocignis-ui/build-storybook-static
 
   CACHE_PATHS_BUILD: |
     ./apps/ocignis-app/build-next-static
@@ -52,47 +59,48 @@ jobs:
           path: ${{ env.CACHE_PATHS_BUILD }}
           key: ${{ env.CACHE_KEY_BUILD }}
 
-  lint:
-    name: Lint ✅
-    needs: build
+  deploy-ocignis-app:
+    name: Deploy - Ocignis App 🚀
+    needs: [build]
     runs-on: ubuntu-latest
 
+    environment:
+      name: Ocignis App
+      url: https://app.ocignis.com
+
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_PATHS_BUILD }}
+          key: ${{ env.CACHE_KEY_BUILD }}
 
-      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
-        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
+      - uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ${{ env.FILE_PATH_OCIGNIS_APP_BUILD_NEXT }}
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_OCIGNIS_APP }}
 
-      - name: Lint ✅
-        run: npm run lint
-
-  tsc:
-    name: TypeScript Compiler 🔎
-    needs: build
+  deploy-ocignis-ui:
+    name: Deploy - Ocignis UI 🚀
+    needs: [build]
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
-        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
-
-      - name: TypeScript Compiler 🔎
-        run: npm run tsc
-
-  test:
-    name: Test 🧪
-    needs: build
-    runs-on: ubuntu-latest
+    environment:
+      name: Ocignis UI
+      url: https://ui.ocignis.com
 
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHE_PATHS_BUILD }}
+          key: ${{ env.CACHE_KEY_BUILD }}
 
-      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
-        uses: ./.github/workflows/actions/setup_node-cache_dep-install_dep
-
-      - name: Test 🧪
-        run: npm run test
+      - uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: ${{ env.FILE_PATH_OCIGNIS_UI_BUILD }}
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_OCIGNIS_UI }}
