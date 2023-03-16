@@ -18,7 +18,7 @@ env:
   CACHE_PATHS_BUILD: |
     ./apps/ocignis-app/build-next-static
     ./packages/ocignis-ui/build-storybook-static
-  CACHE_KEY_BUILD: build-${{ github.sha }}
+  CACHE_KEY_BUILD: build-ci-deployment-${{ github.sha }}
 
 jobs:
   build:
