@@ -3,7 +3,7 @@
 [![CI][ci-badge]][ci-url]
 [![CI-Deployment][ci-deployment-badge]][ci-deployment-url]
 
-Ocignis frontend monorepo
+Ocignis - Minimal trading bot to easily run, stop or schedule trading strategies.
 
 ## Deployments
 
@@ -14,7 +14,7 @@ Ocignis frontend monorepo
 
 - `npm install`
 - `npm run build`
-- `npm run dev` - Start all NextJs apps 🚀
+- `npm run dev` - Spin up Ocignis trading bot app 🚀
 
 Visit Ocignis app [localhost:3100](http://localhost:3100/)
 
